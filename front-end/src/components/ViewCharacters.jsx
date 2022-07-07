@@ -2,10 +2,11 @@ import React from 'react'
 import { useNavigate } from 'react-router-dom'
 import { useState } from 'react';
 import { useEffect } from 'react';
+import CharacterRow from './CharacterRow';
 
 export default function ViewCharacters() {
 
-  const getCharactersURL = 'http://localhost:8082/characters';
+  const charactersURL = 'http://localhost:8082/characters';
     
   const navigate = useNavigate();
   const [characters, setCharacters] = useState([]);
@@ -14,7 +15,7 @@ export default function ViewCharacters() {
   const getCharacters = async () => {
     setLoading(true);
     
-    fetch(getCharactersURL)
+    fetch(charactersURL)
     .then((response) => response.json())
     .then((data) => {
       setCharacters(data);
@@ -31,6 +32,25 @@ export default function ViewCharacters() {
   useEffect(() => {
     getCharacters();
   }, []);
+
+  const deleteCharacter = async (e, id) => {
+    e.preventDefault();
+
+    await fetch(charactersURL + '?id=' + id, {
+        method: "DELETE", 
+      })
+      .then((response) => {
+        if (characters) {
+          setCharacters((prevElement) => {
+            return prevElement.filter((character) => character.id !== id);
+          });
+        }
+      })
+      .catch(error => {
+        window.alert(error);
+        return;
+      });
+};
 
   return (
     <div className='max-w-2xl bg-gray-50 shadow-black shadow-sm mx-auto mt-2'>
@@ -51,20 +71,11 @@ export default function ViewCharacters() {
                 {!loading && (
                 <tbody>
                   {characters.map((character) => (
-                  <tr key={character.id}>
-                    <td className='border pl-2 text-left'>{character.name}</td>
-                    <td className='border pl-2 text-left'>{character.rpgClass}</td>
-                    <td className='border pl-2'>
-                      <div className='inline-flex rounded-md shadow-sm'>
-                      <button className='py-2 px-4 text-sm font-medium rounded-l-md active:bg-cyan-900 bg-gray-800 text-white mt-4 hover:bg-gray-600'>
-                        Edit
-                      </button>
-                      <button className='py-2 px-4 text-sm font-medium rounded-r-md active:bg-cyan-900 bg-gray-800 text-white mt-4 hover:bg-gray-600'>
-                        Delete
-                      </button>
-                      </div>
-                    </td>
-                  </tr>
+                    <CharacterRow 
+                    key={character.id} 
+                    character={character} 
+                    deleteCharacter={deleteCharacter} 
+                    />
                   ))}
                 </tbody>
                 )}

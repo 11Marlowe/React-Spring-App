@@ -1,15 +1,19 @@
 import React from 'react'
 import { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 
 export default function AddCharacter() {
 
   const saveCharacterURL = 'http://localhost:8082/characters';
 
-  const [character, setCharacter] = useState({
+  const navigate = useNavigate();
+
+  const initCharState = {
     id:"",
     name:"",
     rpgClass:"",
-  });
+  };
+  const [character, setCharacter] = useState(initCharState);
 
   const handleChange = (e) => {
     setCharacter({...character, [e.target.name]: e.target.value});
@@ -29,6 +33,8 @@ export default function AddCharacter() {
       window.alert(error);
       return;
     });
+
+    setCharacter(initCharState);
   };
 
   return (
@@ -44,9 +50,10 @@ export default function AddCharacter() {
             <div className='items-center justify-center h-14 w-full my-4'>
                 <label className='block'>Class</label>
                 <select onChange={(e) => handleChange(e)} name='rpgClass' value={character.rpgClass} className='h-8 w-96 mt-2 px-2 border border-black'>
-                  <option value="Knight">Knight</option>
-                  <option value="Mage">Mage</option>
-                  <option value="Priest">Priest</option>
+                  <option value=''></option>
+                  <option value='Knight'>Knight</option>
+                  <option value='Mage'>Mage</option>
+                  <option value='Priest'>Priest</option>
                 </select>
             </div>
             <div className='items-center justify-center h-14 w-full my-4'>

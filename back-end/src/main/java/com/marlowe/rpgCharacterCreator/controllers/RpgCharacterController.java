@@ -23,8 +23,13 @@ public class RpgCharacterController {
         return characterManager.getCharacters();
     }
 
-    @PostMapping(path = "/characters")
+    @PostMapping(path="/characters")
     public RpgCharacter saveCharacter(@RequestBody RpgCharacter character) {
         return characterManager.saveCharacter(character);
+    }
+
+    @DeleteMapping(path="/characters")
+    public boolean deleteCharacter(@RequestParam Long id) {
+        return characterManager.deleteCharacter(id);
     }
 }

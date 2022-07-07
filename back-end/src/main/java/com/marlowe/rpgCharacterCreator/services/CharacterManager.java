@@ -20,4 +20,10 @@ public class CharacterManager {
     public List<RpgCharacter> getCharacters() {
         return rpgCharacterRepository.findAll();
     }
+
+    public boolean deleteCharacter(Long id) {
+        RpgCharacter character = rpgCharacterRepository.findById(id).get();
+        rpgCharacterRepository.delete(character);
+        return true;
+    }
 }
