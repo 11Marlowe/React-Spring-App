@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class CharacterManager {
@@ -22,8 +23,33 @@ public class CharacterManager {
     }
 
     public boolean deleteCharacter(Long id) {
-        RpgCharacter character = rpgCharacterRepository.findById(id).get();
-        rpgCharacterRepository.delete(character);
-        return true;
+        Optional<RpgCharacter> character = rpgCharacterRepository.findById(id);
+
+        if (character.isPresent()) {
+            rpgCharacterRepository.delete(character.get());
+
+            return true;
+        }
+
+        return false;
+    }
+
+    public boolean updateCharacter(Long id, RpgCharacter updatedCharacter) {
+        Optional<RpgCharacter> character = rpgCharacterRepository.findById(id);
+
+        if (character.isPresent()) {
+            RpgCharacter charToUpdate = character.get();
+            charToUpdate.setName(updatedCharacter.getName());
+            charToUpdate.setRpgClass(updatedCharacter.getRpgClass());
+            rpgCharacterRepository.save(charToUpdate);
+
+            return true;
+        }
+
+        return false;
+    }
+
+    public RpgCharacter getCharacter(Long id) {
+        return rpgCharacterRepository.findById(id).get();
     }
 }

@@ -11,25 +11,25 @@ export default function ViewCharacters() {
   const navigate = useNavigate();
   const [characters, setCharacters] = useState([]);
   const [loading, setLoading] = useState(false);
-  
-  const getCharacters = async () => {
-    setLoading(true);
-    
-    fetch(charactersURL)
-    .then((response) => response.json())
-    .then((data) => {
-      setCharacters(data);
-      setLoading(false);
-    })
-    .catch((error) => {
-      console.log(error);
-      setLoading(false);
-    });
-
-    setLoading(false);
-  };
 
   useEffect(() => {
+    const getCharacters = async () => {
+      setLoading(true);
+      
+      fetch(charactersURL)
+      .then((response) => response.json())
+      .then((data) => {
+        setCharacters(data);
+        setLoading(false);
+      })
+      .catch((error) => {
+        console.log(error);
+        setLoading(false);
+      });
+  
+      setLoading(false);
+    };
+    
     getCharacters();
   }, []);
 
@@ -50,7 +50,12 @@ export default function ViewCharacters() {
         window.alert(error);
         return;
       });
-};
+  };
+
+  const editCharacter = (e, id) => {
+    e.preventDefault();
+    navigate(`/editCharacter/${id}`);
+  }; 
 
   return (
     <div className='max-w-2xl bg-gray-50 shadow-black shadow-sm mx-auto mt-2'>
@@ -75,6 +80,7 @@ export default function ViewCharacters() {
                     key={character.id} 
                     character={character} 
                     deleteCharacter={deleteCharacter} 
+                    editCharacter={editCharacter}
                     />
                   ))}
                 </tbody>

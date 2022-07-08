@@ -23,6 +23,11 @@ public class RpgCharacterController {
         return characterManager.getCharacters();
     }
 
+    @GetMapping(path="/characters/{id}")
+    public RpgCharacter getCharacter(@PathVariable Long id) {
+        return characterManager.getCharacter(id);
+    }
+
     @PostMapping(path="/characters")
     public RpgCharacter saveCharacter(@RequestBody RpgCharacter character) {
         return characterManager.saveCharacter(character);
@@ -31,5 +36,10 @@ public class RpgCharacterController {
     @DeleteMapping(path="/characters")
     public boolean deleteCharacter(@RequestParam Long id) {
         return characterManager.deleteCharacter(id);
+    }
+
+    @PutMapping("/characters/{id}")
+    public boolean editCharacter(@PathVariable Long id, @RequestBody RpgCharacter character) {
+        return characterManager.updateCharacter(id, character);
     }
 }

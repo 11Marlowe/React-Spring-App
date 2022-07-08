@@ -1,12 +1,15 @@
 import React from 'react'
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
+import { useNavigate, useParams } from 'react-router-dom';
 
-export default function AddCharacter() {
+export default function EditCharacter() {
+  const editCharacterURL = 'http://localhost:8082/characters';
+  const navigate = useNavigate();
 
-  const saveCharacterURL = 'http://localhost:8082/characters';
+  const {id} = useParams();
 
   const initCharState = {
-    id:"",
+    id:id,
     name:"",
     rpgClass:"",
   };
@@ -16,11 +19,11 @@ export default function AddCharacter() {
     setCharacter({...character, [e.target.name]: e.target.value});
   };
 
-  const saveCharacter = async (e) => {
+  const editCharacter = async (e) => {
     e.preventDefault();
   
-    await fetch(saveCharacterURL + '?id=' + character.id, {
-      method: "POST",
+    await fetch(editCharacterURL + `/${id}`, {
+      method: "PUT",
       headers: {
         "Content-Type": "application/json",
       },
@@ -31,14 +34,28 @@ export default function AddCharacter() {
       return;
     });
 
-    setCharacter(initCharState);
+    navigate('/viewCharacters');
   };
+
+  useEffect(() => {
+    const getCharacter = async () => {
+      fetch(editCharacterURL + `/${id}`)
+      .then((response) => response.json())
+      .then((data) => {
+        setCharacter(data);
+      })
+      .catch((error) => {
+        console.log(error);
+      });
+    };
+    getCharacter();
+  }, [id]);
 
   return (
     <div className='flex max-w-2xl bg-gray-50 shadow-black shadow-sm mx-auto mt-2'>
         <div className='px-8 py-8'>
             <div className='text-2xl'>
-                <h1>Add New Character</h1>
+                <h1>Edit Character</h1>
             </div>
             <div className='items-center justify-center h-14 w-full my-4'>
                 <label className='block'>Name</label>
@@ -54,7 +71,9 @@ export default function AddCharacter() {
                 </select>
             </div>
             <div className='items-center justify-center h-14 w-full my-4'>
-                <button onClick={saveCharacter} className='rounded active:bg-cyan-900 bg-gray-800 text-white px-4 py-2 mt-4 hover:bg-gray-600'>Save</button>
+                <button onClick={editCharacter} className='rounded active:bg-cyan-900 bg-gray-800 text-white px-4 py-2 mt-4 hover:bg-gray-600'>
+                    Update
+                </button>
             </div>
         </div>
     </div>
