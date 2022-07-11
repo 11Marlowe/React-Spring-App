@@ -9,7 +9,7 @@ import java.util.List;
 import java.util.Optional;
 
 @Service
-public class CharacterManager {
+public class CharacterService {
 
     @Autowired
     private RpgCharacterRepository rpgCharacterRepository;

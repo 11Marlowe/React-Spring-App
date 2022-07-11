@@ -19,7 +19,7 @@ export default function AddCharacter() {
   const saveCharacter = async (e) => {
     e.preventDefault();
   
-    await fetch(saveCharacterURL + '?id=' + character.id, {
+    await fetch(saveCharacterURL, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
